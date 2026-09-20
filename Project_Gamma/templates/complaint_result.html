@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Assessment Report — SmartComplaint AI{% endblock %}
+
+{% block content %}
+<section style="max-width: 720px; margin: 2rem auto;">
+  <div class="case-file-container" style="font-family: var(--font-mono);">
+    
+    <div style="border-bottom: 1px solid var(--border-strong); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+      <div style="font-size: 0.8rem; color: var(--accent-copper); letter-spacing: 0.15em; font-weight: 700; margin-bottom: 0.25rem;">
+        AUTOMATED ASSESSMENT REPORT
+      </div>
+      <div style="font-family: var(--font-serif); font-size: 2rem; color: var(--color-ivory);">
+        CASE / {{ complaint.tracking_id }}
+      </div>
+    </div>
+
+    <!-- Assessment Overview Grid -->
+    <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.5rem;">
+      
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+        <div>
+          <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">PRIORITY LEVEL</div>
+          {% if complaint.priority == 'CRITICAL' %}
+            <div class="status-tag status-critical" style="margin-top: 0.25rem;">CRITICAL</div>
+          {% elif complaint.priority == 'HIGH' %}
+            <div class="status-tag status-high" style="margin-top: 0.25rem;">HIGH</div>
+          {% elif complaint.priority == 'MEDIUM' %}
+            <div class="status-tag status-medium" style="margin-top: 0.25rem;">MEDIUM</div>
+          {% else %}
+            <div class="status-tag status-low" style="margin-top: 0.25rem;">LOW</div>
+          {% endif %}
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">AI EVALUATION SCORE</div>
+          <div style="font-size: 2.25rem; font-weight: 700; color: var(--color-ivory); line-height: 1;">
+            {{ complaint.ai_score }} <span style="font-size: 1rem; color: var(--text-dim);">/ 100</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem;">
+        <div>
+          <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">CATEGORY</div>
+          <div style="font-size: 1rem; color: var(--color-ivory); margin-top: 0.25rem;">{{ complaint.category }}</div>
+        </div>
+        <div>
+          <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">URGENCY EVALUATION</div>
+          <div style="font-size: 1rem; color: var(--color-ivory); margin-top: 0.25rem;">{{ complaint.urgency }}</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem;">RECOMMENDED DISPATCH PROTOCOL</div>
+        <div style="color: var(--text-muted); font-size: 0.9rem;">{{ complaint.recommended_handling }}</div>
+      </div>
+
+    </div>
+
+    <div class="divider-editorial"></div>
+
+    <!-- Assessment Basis Checklist -->
+    <div style="margin-bottom: 2.5rem;">
+      <div style="font-size: 0.8rem; color: var(--accent-copper); letter-spacing: 0.12em; margin-bottom: 1rem;">
+        ASSESSMENT BASIS
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-muted);">
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem;">
+          <span>Emergency language check</span>
+          <span style="color: var(--accent-copper);">✓</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem;">
+          <span>Infrastructure risk category analysis</span>
+          <span style="color: var(--accent-copper);">✓</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem;">
+          <span>Public safety impact calculation</span>
+          <span style="color: var(--accent-copper);">✓</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span>Detail depth verification bonus</span>
+          <span style="color: var(--accent-copper);">✓</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <a href="{{ url_for('complaint_detail', id=complaint.id) }}" class="btn-editorial btn-editorial-primary" style="flex: 1;">
+        View Official Case File
+      </a>
+      <a href="{{ url_for('track_complaint', tracking_id=complaint.tracking_id) }}" class="btn-editorial btn-editorial-secondary">
+        Track Case Status
+      </a>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

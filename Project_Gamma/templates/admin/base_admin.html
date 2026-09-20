@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Civic Operations Command Center — SmartComplaint AI{% endblock %}
+
+{% block content %}
+
+<!-- Header Rail for Admin -->
+<div style="border-bottom: 1px solid var(--border-strong); padding-bottom: 1.5rem; margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <div class="section-num">CIVIC OPERATIONS / COMMAND CENTER</div>
+    <h1 class="editorial-heading" style="margin-bottom: 0.25rem;">Authority Operations Workspace</h1>
+    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">
+      DISPATCH OPERATOR: {{ session.get('user_name') }} ({{ session.get('user_email') }})
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.8rem; flex-wrap: wrap;">
+    <a href="{{ url_for('admin_overview') }}" class="btn-editorial btn-editorial-secondary btn-sm {% if request.endpoint == 'admin_overview' %}btn-editorial-primary{% endif %}">OVERVIEW</a>
+    <a href="{{ url_for('admin_priority_monitor') }}" class="btn-editorial btn-editorial-secondary btn-sm {% if request.endpoint == 'admin_priority_monitor' %}btn-editorial-primary{% endif %}">PRIORITY QUEUE</a>
+    <a href="{{ url_for('admin_complaints') }}" class="btn-editorial btn-editorial-secondary btn-sm {% if request.endpoint == 'admin_complaints' %}btn-editorial-primary{% endif %}">ALL CASES</a>
+    <a href="{{ url_for('admin_analytics') }}" class="btn-editorial btn-editorial-secondary btn-sm {% if request.endpoint == 'admin_analytics' %}btn-editorial-primary{% endif %}">ANALYTICS</a>
+    <a href="{{ url_for('admin_users') }}" class="btn-editorial btn-editorial-secondary btn-sm {% if request.endpoint == 'admin_users' %}btn-editorial-primary{% endif %}">CITIZENS</a>
+  </div>
+</div>
+
+<div>
+  {% block admin_content %}{% endblock %}
+</div>
+
+{% endblock %}

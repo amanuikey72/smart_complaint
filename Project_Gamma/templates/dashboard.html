@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Citizen Command Board — SmartComplaint AI{% endblock %}
+
+{% block content %}
+
+<!-- Header Command Board -->
+<div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 2rem; margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <div class="section-num">CITIZEN / DASHBOARD // 13 SEPTEMBER 2026</div>
+    <h1 class="editorial-heading" style="margin-bottom: 0.25rem;">Active Case Operations</h1>
+    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">
+      USER: {{ session.get('user_name', 'Citizen') }} ({{ session.get('user_email') }})
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 1rem;">
+    <a href="{{ url_for('new_complaint') }}" class="btn-editorial btn-editorial-primary">
+      <i class="fa-solid fa-plus"></i> File New Case
+    </a>
+  </div>
+</div>
+
+<!-- Primary Metric Section -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3rem; margin-bottom: 4rem; align-items: stretch;">
+  
+  <div class="metric-box" style="display: flex; flex-direction: column; justify-content: center;">
+    <div class="metric-number">
+      {% if total_complaints < 10 %}0{% endif %}{{ total_complaints }}
+    </div>
+    <div class="metric-label">ACTIVE CASES RECORDED</div>
+  </div>
+
+  <div style="border: 1px solid var(--border-subtle); background: var(--bg-surface); padding: 1.75rem; display: flex; flex-direction: column; justify-content: space-between; font-family: var(--font-mono); font-size: 0.8rem; gap: 1rem;">
+    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
+      <span style="color: var(--text-dim);">PENDING REVIEW</span>
+      <span style="color: var(--color-ivory);">{{ pending_count }}</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
+      <span style="color: var(--text-dim);">IN DISPATCH</span>
+      <span style="color: var(--accent-copper);">{{ in_progress_count }}</span>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <span style="color: var(--text-dim);">RESOLVED</span>
+      <span style="color: var(--status-low);">{{ resolved_count }}</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Structured Cases List with Horizontal Dividers -->
+<div>
+  <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-copper); letter-spacing: 0.15em; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+    <span>CASE REGISTRY</span>
+    <a href="{{ url_for('my_complaints') }}" style="color: var(--text-muted); text-decoration: none;">VIEW ALL CASES &rarr;</a>
+  </div>
+
+  {% if recent_complaints %}
+    <div class="table-editorial-wrapper">
+      <table class="table-editorial">
+        <thead>
+          <tr>
+            <th>CASE ID</th>
+            <th>DESCRIPTION / TITLE</th>
+            <th>PRIORITY</th>
+            <th>AI SCORE</th>
+            <th>STATUS</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in recent_complaints %}
+            <tr>
+              <td style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-copper);">
+                {{ c.tracking_id }}
+              </td>
+              <td>
+                <a href="{{ url_for('complaint_detail', id=c.id) }}" style="color: var(--text-main); font-weight: 600; text-decoration: none;">
+                  {{ c.title }}
+                </a>
+                <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">
+                  {{ c.category }}
+                </div>
+              </td>
+              <td>
+                {% if c.priority == 'CRITICAL' %}
+                  <span class="status-tag status-critical">CRITICAL</span>
+                {% elif c.priority == 'HIGH' %}
+                  <span class="status-tag status-high">HIGH</span>
+                {% elif c.priority == 'MEDIUM' %}
+                  <span class="status-tag status-medium">MEDIUM</span>
+                {% else %}
+                  <span class="status-tag status-low">LOW</span>
+                {% endif %}
+              </td>
+              <td style="font-family: var(--font-mono); font-weight: 700; color: var(--color-ivory);">
+                {{ c.ai_score }} <span style="font-size: 0.75rem; color: var(--text-dim);">/ 100</span>
+              </td>
+              <td>
+                {% if c.status == 'Pending' %}
+                  <span class="status-tag status-pending">PENDING</span>
+                {% elif c.status == 'In Progress' %}
+                  <span class="status-tag status-in-progress">IN PROGRESS</span>
+                {% elif c.status == 'Resolved' %}
+                  <span class="status-tag status-resolved">RESOLVED</span>
+                {% else %}
+                  <span class="status-tag status-pending">REJECTED</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ url_for('complaint_detail', id=c.id) }}" class="btn-editorial btn-editorial-secondary btn-sm">
+                  Inspect File
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div style="border: 1px solid var(--border-subtle); background: var(--bg-surface); padding: 4rem; text-align: center;">
+      <p style="font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+        NO ACTIVE COMPLAINTS RECORDED IN YOUR CITIZEN DOSSIER.
+      </p>
+      <a href="{{ url_for('new_complaint') }}" class="btn-editorial btn-editorial-primary">
+        File First Complaint
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

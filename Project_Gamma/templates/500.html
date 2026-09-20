@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}500 Internal Error — SmartComplaint AI{% endblock %}
+
+{% block content %}
+<section style="max-width: 600px; margin: 4rem auto; text-align: center; font-family: var(--font-mono);">
+  <div style="border: 1px solid var(--status-critical-border); background: var(--bg-surface); padding: 4rem 2rem;">
+    <div style="font-size: 5rem; font-weight: 700; color: var(--status-critical); line-height: 1; margin-bottom: 1rem;">
+      500
+    </div>
+    <h2 style="font-family: var(--font-serif); font-size: 1.75rem; color: var(--color-ivory); margin-bottom: 1rem;">
+      SYSTEM EXCEPTION
+    </h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2.5rem;">
+      An unexpected internal exception occurred. The incident has been flagged for system audit.
+    </p>
+
+    <div style="display: flex; justify-content: center; gap: 1rem;">
+      <a href="{{ url_for('index') }}" class="btn-editorial btn-editorial-primary">
+        Return Home
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

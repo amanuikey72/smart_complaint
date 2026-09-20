@@ -1,0 +1,62 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_content %}
+
+<div style="font-family: var(--font-mono); margin-bottom: 2.5rem;">
+  <div style="font-size: 0.8rem; color: var(--accent-copper); letter-spacing: 0.15em; font-weight: 700; margin-bottom: 0.25rem;">
+    USER REGISTRY // CITIZEN DIRECTORY
+  </div>
+  <h2 style="font-family: var(--font-serif); font-size: 2rem; color: var(--color-ivory);">
+    Registered Users & Authorities
+  </h2>
+</div>
+
+<div style="margin-bottom: 1.5rem;">
+  <input type="text" id="tableSearchInput" class="form-control-editorial" placeholder="Filter by name, email, or phone number...">
+</div>
+
+<div class="table-editorial-wrapper">
+  <table class="table-editorial">
+    <thead>
+      <tr>
+        <th>USER ID</th>
+        <th>NAME & EMAIL</th>
+        <th>PHONE</th>
+        <th>ROLE</th>
+        <th>CASES SUBMITTED</th>
+        <th>REGISTRATION DATE</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+        <tr>
+          <td style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-copper);">
+            USR-{{ u.id }}
+          </td>
+          <td>
+            <div style="font-weight: 600; color: var(--color-ivory);">{{ u.name }}</div>
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">{{ u.email }}</div>
+          </td>
+          <td style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
+            {{ u.phone or 'N/A' }}
+          </td>
+          <td>
+            {% if u.role == 'admin' %}
+              <span class="status-tag status-critical">ADMIN</span>
+            {% else %}
+              <span class="status-tag status-low">CITIZEN</span>
+            {% endif %}
+          </td>
+          <td style="font-family: var(--font-mono); font-weight: 700; color: var(--color-ivory);">
+            {{ u.complaint_count }}
+          </td>
+          <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">
+            {{ u.created_at[:10] }}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

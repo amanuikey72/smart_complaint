@@ -1,0 +1,60 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_content %}
+
+<div style="font-family: var(--font-mono); margin-bottom: 2.5rem;">
+  <div style="font-size: 0.8rem; color: var(--accent-copper); letter-spacing: 0.15em; font-weight: 700; margin-bottom: 0.25rem;">
+    REAL-TIME DATA VISUALIZATION // DATABASE TELEMETRY
+  </div>
+  <h2 style="font-family: var(--font-serif); font-size: 2rem; color: var(--color-ivory);">
+    Restrained Analytics System
+  </h2>
+</div>
+
+<!-- 2x2 Grid of Restrained Charts -->
+<div class="grid-asymmetric" style="grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem;">
+  
+  <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 1.75rem;">
+    <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 1rem;">
+      01 // PRIORITY TIER DISTRIBUTION
+    </div>
+    <div style="position: relative; height: 260px;">
+      <canvas id="priorityDoughnutChart"></canvas>
+    </div>
+  </div>
+
+  <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 1.75rem;">
+    <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 1rem;">
+      02 // STATUS WORKFLOW DISTRIBUTION
+    </div>
+    <div style="position: relative; height: 260px;">
+      <canvas id="statusDoughnutChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<div class="grid-asymmetric" style="grid-template-columns: 1fr 1fr; gap: 2.5rem;">
+  
+  <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 1.75rem;">
+    <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 1rem;">
+      03 // SECTOR CATEGORY VOLUME
+    </div>
+    <div style="position: relative; height: 260px;">
+      <canvas id="categoryBarChart"></canvas>
+    </div>
+  </div>
+
+  <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 1.75rem;">
+    <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 1rem;">
+      04 // MONTHLY SUBMISSION TREND
+    </div>
+    <div style="position: relative; height: 260px;">
+      <canvas id="monthlyTrendChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/admin_charts.js') }}"></script>
+{% endblock %}

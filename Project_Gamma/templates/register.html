@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Register Citizen Account — SmartComplaint AI{% endblock %}
+
+{% block content %}
+<section style="max-width: 900px; margin: 2rem auto;">
+  <div class="grid-asymmetric" style="align-items: stretch;">
+    
+    <!-- Left Column: Editorial Info -->
+    <div style="border: 1px solid var(--border-subtle); background: var(--bg-secondary); padding: 2.5rem; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;">
+      <div>
+        <div class="section-num">CITIZEN ENROLLMENT</div>
+        <h2 class="editorial-heading" style="font-size: 2rem; margin-bottom: 1.5rem;">Join Civic Platform</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+          Register an official citizen account to submit infrastructure issues, receive automated AI priority scores, and track case progress in real-time.
+        </p>
+      </div>
+
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim); border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+        PRIVACY: CITIZEN DATA IS ENCRYPTED AND RESERVED SOLELY FOR MUNICIPAL DISPATCH.
+      </div>
+    </div>
+
+    <!-- Right Column: Registration Form -->
+    <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 2.5rem;">
+      <h3 style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--color-ivory);">Create Account</h3>
+
+      <form id="registerForm" action="{{ url_for('register') }}" method="POST">
+        <div class="form-group">
+          <label class="form-label" for="name">Full Name</label>
+          <input type="text" id="name" name="name" class="form-control-editorial" placeholder="e.g. Rahul Sharma" value="{{ form_data.name if form_data else '' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" name="email" class="form-control-editorial" placeholder="name@example.com" value="{{ form_data.email if form_data else '' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">Phone Number (Optional)</label>
+          <input type="tel" id="phone" name="phone" class="form-control-editorial" placeholder="+91 98765 43210" value="{{ form_data.phone if form_data else '' }}">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control-editorial" placeholder="At least 6 characters" minlength="6" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirm_password">Confirm Password</label>
+          <input type="password" id="confirm_password" name="confirm_password" class="form-control-editorial" placeholder="Re-enter password" required>
+          <div id="passwordMismatchError" style="display: none; color: #ff6b6b; font-size: 0.8rem; margin-top: 0.35rem; font-family: var(--font-mono);">
+            <i class="fa-solid fa-triangle-exclamation"></i> Passwords do not match.
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn-editorial btn-editorial-primary" style="width: 100%; padding: 0.85rem; margin-top: 0.5rem;">
+          Register Account
+        </button>
+      </form>
+
+      <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-dim);">
+        Already registered? <a href="{{ url_for('login') }}" style="color: var(--accent-copper); text-decoration: none; font-weight: 600;">Sign in here</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const registerForm = document.getElementById('registerForm');
+  const passwordInput = document.getElementById('password');
+  const confirmPasswordInput = document.getElementById('confirm_password');
+  const errorDiv = document.getElementById('passwordMismatchError');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function validatePasswords() {
+    if (confirmPasswordInput.value.length > 0 && passwordInput.value !== confirmPasswordInput.value) {
+      errorDiv.style.display = 'block';
+      confirmPasswordInput.style.borderColor = '#ff6b6b';
+      return false;
+    } else {
+      errorDiv.style.display = 'none';
+      confirmPasswordInput.style.borderColor = '';
+      return true;
+    }
+  }
+
+  passwordInput.addEventListener('input', validatePasswords);
+  confirmPasswordInput.addEventListener('input', validatePasswords);
+
+  registerForm.addEventListener('submit', (e) => {
+    if (!validatePasswords()) {
+      e.preventDefault();
+    }
+  });
+});
+</script>
+{% endblock %}

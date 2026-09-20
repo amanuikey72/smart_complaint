@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}404 Page Not Found — SmartComplaint AI{% endblock %}
+
+{% block content %}
+<section style="max-width: 600px; margin: 4rem auto; text-align: center; font-family: var(--font-mono);">
+  <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 4rem 2rem;">
+    <div style="font-size: 5rem; font-weight: 700; color: var(--accent-copper); line-height: 1; margin-bottom: 1rem;">
+      404
+    </div>
+    <h2 style="font-family: var(--font-serif); font-size: 1.75rem; color: var(--color-ivory); margin-bottom: 1rem;">
+      RESOURCE NOT FOUND
+    </h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2.5rem;">
+      The requested route or case file identifier could not be located in the governance registry.
+    </p>
+
+    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+      <a href="{{ url_for('index') }}" class="btn-editorial btn-editorial-primary">
+        Return Home
+      </a>
+      <a href="{{ url_for('track_complaint') }}" class="btn-editorial btn-editorial-secondary">
+        Track Case
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

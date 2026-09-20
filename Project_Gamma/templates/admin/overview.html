@@ -1,0 +1,125 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_content %}
+
+<!-- Large Editorial Statistics -->
+<div class="grid-4col" style="margin-bottom: 3rem;">
+  
+  <div class="metric-box">
+    <div class="metric-number">
+      {% if total_complaints < 10 %}0{% endif %}{{ total_complaints }}
+    </div>
+    <div class="metric-label">TOTAL CASES</div>
+  </div>
+
+  <div class="metric-box" style="border-left: 3px solid var(--status-critical);">
+    <div class="metric-number" style="color: #F0A0A0;">
+      {% if critical_count < 10 %}0{% endif %}{{ critical_count }}
+    </div>
+    <div class="metric-label" style="color: #F0A0A0;">CRITICAL CASES</div>
+  </div>
+
+  <div class="metric-box" style="border-left: 3px solid var(--status-medium);">
+    <div class="metric-number" style="color: #F2D59B;">
+      {% if pending_count < 10 %}0{% endif %}{{ pending_count }}
+    </div>
+    <div class="metric-label">PENDING ACTION</div>
+  </div>
+
+  <div class="metric-box" style="border-left: 3px solid var(--status-low);">
+    <div class="metric-number" style="color: #B5D4BC;">
+      {% if resolved_count < 10 %}0{% endif %}{{ resolved_count }}
+    </div>
+    <div class="metric-label">RESOLVED CASES</div>
+  </div>
+
+</div>
+
+<!-- Priority Queue Section -->
+<div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 2rem; margin-bottom: 3rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+    <div>
+      <div class="section-num">PRIORITY QUEUE</div>
+      <h2 style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-ivory);">Active High-Risk Complaints</h2>
+    </div>
+    <a href="{{ url_for('admin_priority_monitor') }}" class="btn-editorial btn-editorial-secondary btn-sm">
+      Full Priority Monitor &rarr;
+    </a>
+  </div>
+
+  {% if priority_alerts %}
+    <div class="table-editorial-wrapper">
+      <table class="table-editorial">
+        <thead>
+          <tr>
+            <th>CASE ID</th>
+            <th>COMPLAINT</th>
+            <th>CATEGORY</th>
+            <th>PRIORITY</th>
+            <th>AI SCORE</th>
+            <th>STATUS</th>
+            <th>TIME</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in priority_alerts %}
+            <tr>
+              <td style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-copper);">
+                {{ c.tracking_id }}
+              </td>
+              <td>
+                <a href="{{ url_for('complaint_detail', id=c.id) }}" style="color: var(--text-main); font-weight: 600; text-decoration: none;">
+                  {{ c.title }}
+                </a>
+                <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">
+                  {{ c.location }}
+                </div>
+              </td>
+              <td style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
+                {{ c.category }}
+              </td>
+              <td>
+                {% if c.priority == 'CRITICAL' %}
+                  <span class="status-tag status-critical">CRITICAL</span>
+                {% elif c.priority == 'HIGH' %}
+                  <span class="status-tag status-high">HIGH</span>
+                {% elif c.priority == 'MEDIUM' %}
+                  <span class="status-tag status-medium">MEDIUM</span>
+                {% else %}
+                  <span class="status-tag status-low">LOW</span>
+                {% endif %}
+              </td>
+              <td style="font-family: var(--font-mono); font-weight: 700; color: var(--color-ivory);">
+                {{ c.ai_score }}
+              </td>
+              <td>
+                {% if c.status == 'Pending' %}
+                  <span class="status-tag status-pending">PENDING</span>
+                {% elif c.status == 'In Progress' %}
+                  <span class="status-tag status-in-progress">IN PROGRESS</span>
+                {% else %}
+                  <span class="status-tag status-resolved">RESOLVED</span>
+                {% endif %}
+              </td>
+              <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">
+                {{ c.created_at[:16] }}
+              </td>
+              <td>
+                <a href="{{ url_for('complaint_detail', id=c.id) }}" class="btn-editorial btn-editorial-primary btn-sm">
+                  Inspect
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div style="padding: 3rem; text-align: center; font-family: var(--font-mono); color: var(--text-muted);">
+      NO HIGH-RISK CASES IN ACTIVE DISPATCH QUEUE.
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

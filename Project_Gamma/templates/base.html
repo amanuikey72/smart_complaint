@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SmartComplaint AI — Institutional Civic Infrastructure{% endblock %}</title>
+
+  <!-- SEO Meta -->
+  <meta name="description" content="Institutional civic complaint management platform powered by explainable AI prioritization and real-time governance analytics.">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Editorial CSS Design System -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <div class="app-shell">
+    
+    <!-- Desktop Navigation Rail -->
+    <aside class="nav-rail">
+      <div>
+        <a href="{{ url_for('index') }}" class="brand-mark">
+          <span class="brand-code">SC.AI</span>
+          <span class="brand-title">SmartComplaint</span>
+        </a>
+
+        <ul class="nav-menu">
+          <li>
+            <a href="{{ url_for('index') }}" class="nav-item-link {% if request.endpoint == 'index' %}active{% endif %}">
+              <i class="fa-solid fa-square"></i> Home
+            </a>
+          </li>
+          <li>
+            <a href="{{ url_for('track_complaint') }}" class="nav-item-link {% if request.endpoint == 'track_complaint' %}active{% endif %}">
+              <i class="fa-solid fa-magnifying-glass"></i> Track
+            </a>
+          </li>
+          {% if session.get('user_id') %}
+            {% if session.get('role') == 'admin' %}
+              <li>
+                <a href="{{ url_for('admin_overview') }}" class="nav-item-link {% if 'admin' in (request.endpoint or '') %}active{% endif %}">
+                  <i class="fa-solid fa-sliders"></i> Command Center
+                </a>
+              </li>
+            {% else %}
+              <li>
+                <a href="{{ url_for('dashboard') }}" class="nav-item-link {% if request.endpoint == 'dashboard' %}active{% endif %}">
+                  <i class="fa-solid fa-chart-simple"></i> Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('new_complaint') }}" class="nav-item-link {% if request.endpoint == 'new_complaint' %}active{% endif %}">
+                  <i class="fa-solid fa-plus"></i> Report Issue
+                </a>
+              </li>
+              <li>
+                <a href="{{ url_for('my_complaints') }}" class="nav-item-link {% if request.endpoint == 'my_complaints' %}active{% endif %}">
+                  <i class="fa-solid fa-list-ol"></i> My Cases
+                </a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li>
+              <a href="{{ url_for('login') }}" class="nav-item-link {% if request.endpoint == 'login' %}active{% endif %}">
+                <i class="fa-solid fa-lock"></i> Sign In
+              </a>
+            </li>
+            <li>
+              <a href="{{ url_for('register') }}" class="nav-item-link {% if request.endpoint == 'register' %}active{% endif %}">
+                <i class="fa-solid fa-user-plus"></i> Register
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="nav-bottom-actions">
+        {% if session.get('user_id') %}
+          <div class="user-profile-badge">
+            <div class="user-profile-name">{{ session.get('user_name') }}</div>
+            <div class="user-profile-role">{{ session.get('role') }}</div>
+          </div>
+          <a href="{{ url_for('logout') }}" class="btn-editorial btn-editorial-secondary btn-sm" style="width: 100%;">
+            <i class="fa-solid fa-power-off"></i> Exit Session
+          </a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="btn-editorial btn-editorial-primary btn-sm" style="width: 100%;">
+            Access Portal
+          </a>
+        {% endif %}
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="viewport-content">
+      
+      <!-- Top Status Bar -->
+      <header class="viewport-topbar">
+        <div class="topbar-title">
+          CIVIC INFRASTRUCTURE ENGINE // SMARTCOMPLAINT AI
+        </div>
+        <div class="topbar-meta">
+          <span>STATUS / ONLINE</span>
+          <span>13 SEP 2026</span>
+        </div>
+      </header>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div style="padding: 1.5rem 2.5rem 0 2.5rem;">
+            {% for category, message in messages %}
+              <div class="alert-editorial {% if category == 'danger' %}danger{% elif category == 'warning' %}warning{% elif category == 'success' %}success{% endif %}">
+                <span>{{ message }}</span>
+                <button onclick="this.parentElement.remove()" style="background:none; border:none; color:var(--text-dim); cursor:pointer;">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <!-- Page Content -->
+      <main class="viewport-main">
+        {% block content %}{% endblock %}
+      </main>
+
+      <!-- Institutional Footer -->
+      <footer class="viewport-footer">
+        <div>
+          SMARTCOMPLAINT AI &copy; 2026 / CIVIC GOVERNANCE & PRIORITIZATION SYSTEM
+        </div>
+        <div style="display: flex; gap: 2rem;">
+          <a href="{{ url_for('index') }}" style="color: var(--text-dim); text-decoration: none;">SYSTEM LOGIC</a>
+          <a href="{{ url_for('track_complaint') }}" style="color: var(--text-dim); text-decoration: none;">PUBLIC TRACKER</a>
+          <a href="{{ url_for('login') }}" style="color: var(--text-dim); text-decoration: none;">AUTHORITY PORTAL</a>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation Rail -->
+  <nav class="mobile-bottom-nav">
+    <a href="{{ url_for('index') }}" class="mobile-nav-btn {% if request.endpoint == 'index' %}active{% endif %}">
+      <i class="fa-solid fa-square"></i> Home
+    </a>
+    <a href="{{ url_for('track_complaint') }}" class="mobile-nav-btn {% if request.endpoint == 'track_complaint' %}active{% endif %}">
+      <i class="fa-solid fa-magnifying-glass"></i> Track
+    </a>
+    {% if session.get('user_id') %}
+      {% if session.get('role') == 'admin' %}
+        <a href="{{ url_for('admin_overview') }}" class="mobile-nav-btn {% if 'admin' in (request.endpoint or '') %}active{% endif %}">
+          <i class="fa-solid fa-sliders"></i> Admin
+        </a>
+      {% else %}
+        <a href="{{ url_for('dashboard') }}" class="mobile-nav-btn {% if request.endpoint == 'dashboard' %}active{% endif %}">
+          <i class="fa-solid fa-chart-simple"></i> Dashboard
+        </a>
+        <a href="{{ url_for('new_complaint') }}" class="mobile-nav-btn {% if request.endpoint == 'new_complaint' %}active{% endif %}">
+          <i class="fa-solid fa-plus"></i> Report
+        </a>
+      {% endif %}
+    {% else %}
+      <a href="{{ url_for('login') }}" class="mobile-nav-btn {% if request.endpoint == 'login' %}active{% endif %}">
+        <i class="fa-solid fa-lock"></i> Login
+      </a>
+      <a href="{{ url_for('register') }}" class="mobile-nav-btn {% if request.endpoint == 'register' %}active{% endif %}">
+        <i class="fa-solid fa-user-plus"></i> Register
+      </a>
+    {% endif %}
+  </nav>
+
+  <!-- Global Scripts -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

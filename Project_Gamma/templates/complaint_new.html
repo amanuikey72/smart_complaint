@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Complaint — SmartComplaint AI{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 2.5rem;">
+  <div class="section-num">CASE SUBMISSION // STEP-BASED FORM</div>
+  <h1 class="editorial-heading">File Infrastructure Incident Report</h1>
+  <p style="color: var(--text-muted); max-width: 600px;">
+    Complete the four steps below. The embedded language parser evaluates your report in real-time.
+  </p>
+</div>
+
+<!-- Main 2-Column Layout -->
+<div class="grid-asymmetric" style="grid-template-columns: 3fr 2fr; gap: 3rem; align-items: start;">
+  
+  <!-- Left Column: Step-Based Editorial Form -->
+  <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 2.5rem;">
+    <form action="{{ url_for('new_complaint') }}" method="POST">
+      
+      <!-- STEP 01 -->
+      <div style="margin-bottom: 2.5rem;">
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper); letter-spacing: 0.15em; margin-bottom: 0.5rem;">
+          STEP 01
+        </div>
+        <div style="font-family: var(--font-serif); font-size: 1.35rem; margin-bottom: 1rem; color: var(--color-ivory);">
+          WHAT IS THE PROBLEM?
+        </div>
+        <input type="text" id="complaintTitle" name="title" class="form-control-editorial" placeholder="e.g. Major Water Pipeline Rupture & Localized Flooding" required>
+      </div>
+
+      <!-- STEP 02 -->
+      <div style="margin-bottom: 2.5rem;">
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper); letter-spacing: 0.15em; margin-bottom: 0.5rem;">
+          STEP 02
+        </div>
+        <div style="font-family: var(--font-serif); font-size: 1.35rem; margin-bottom: 1rem; color: var(--color-ivory);">
+          TELL US WHAT HAPPENED
+        </div>
+        <textarea id="complaintDesc" name="description" class="form-control-editorial" style="min-height: 160px;" placeholder="Describe the hazard, urgency indicators, risk to public safety, and time elapsed..." required></textarea>
+      </div>
+
+      <!-- STEP 03 -->
+      <div style="margin-bottom: 2.5rem;">
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper); letter-spacing: 0.15em; margin-bottom: 0.5rem;">
+          STEP 03
+        </div>
+        <div style="font-family: var(--font-serif); font-size: 1.35rem; margin-bottom: 1rem; color: var(--color-ivory);">
+          WHERE IS IT?
+        </div>
+        <input type="text" id="location" name="location" class="form-control-editorial" placeholder="e.g. Intersection of 5th Ave and Market Street" required>
+      </div>
+
+      <!-- STEP 04 -->
+      <div style="margin-bottom: 2.5rem;">
+        <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper); letter-spacing: 0.15em; margin-bottom: 0.5rem;">
+          STEP 04
+        </div>
+        <div style="font-family: var(--font-serif); font-size: 1.35rem; margin-bottom: 1rem; color: var(--color-ivory);">
+          CLASSIFICATION
+        </div>
+        <select id="complaintCategory" name="category" class="form-control-editorial">
+          <option value="Water & Utilities">Water & Utilities</option>
+          <option value="Infrastructure & Roads">Infrastructure & Roads</option>
+          <option value="Safety & Security">Safety & Security</option>
+          <option value="Health & Sanitation">Health & Sanitation</option>
+          <option value="Environment & Public Spaces">Environment & Public Spaces</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 1rem; border-top: 1px solid var(--border-subtle); padding-top: 2rem;">
+        <button type="submit" class="btn-editorial btn-editorial-primary" style="flex: 1; padding: 1rem;">
+          Submit Incident Report
+        </button>
+        <a href="{{ url_for('dashboard') }}" class="btn-editorial btn-editorial-secondary">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Right Column: System Analysis Live Side Panel -->
+  <div style="border: 1px solid var(--border-strong); background: var(--bg-secondary); padding: 2rem; position: sticky; top: 100px; font-family: var(--font-mono);">
+    
+    <div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+      <div style="font-size: 0.8rem; color: var(--accent-copper); letter-spacing: 0.15em; font-weight: 700;">
+        SYSTEM ANALYSIS
+      </div>
+      <div id="aiStatusText" style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.35rem;">
+        AWAITING INPUT...
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">CATEGORY</div>
+        <div id="aiCategoryVal" style="font-size: 0.95rem; color: var(--color-ivory);">—</div>
+      </div>
+
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">URGENCY</div>
+        <div id="aiUrgencyVal" style="font-size: 0.95rem; color: var(--color-ivory);">—</div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <div>
+          <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">PRIORITY</div>
+          <div id="aiPriorityBadge" class="status-tag status-low" style="margin-top: 0.25rem;">LOW</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">SCORE</div>
+          <div id="aiScoreValue" style="font-size: 1.75rem; font-weight: 700; color: var(--color-ivory); line-height: 1;">
+            0 / 100
+          </div>
+        </div>
+      </div>
+
+      <div class="divider-editorial" style="margin: 0.5rem 0;"></div>
+
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem;">DETECTED SIGNALS</div>
+        <div id="aiDetectedSignals">—</div>
+      </div>
+
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem;">ASSESSMENT FACTORS</div>
+        <div id="aiExplanationList">—</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- AI Live Script -->
+<script src="{{ url_for('static', filename='js/ai_analyzer.js') }}"></script>
+{% endblock %}

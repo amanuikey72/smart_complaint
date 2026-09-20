@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Case Directory — SmartComplaint AI{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <div class="section-num">DIRECTORY // ALL RECORDS</div>
+    <h1 class="editorial-heading" style="margin-bottom: 0.25rem;">
+      {% if session.get('role') == 'admin' %}Municipal Case Matrix{% else %}My Complaint Records{% endif %}
+    </h1>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">
+      Filter, search, and inspect complaints ordered by AI priority.
+    </p>
+  </div>
+
+  {% if session.get('role') != 'admin' %}
+    <a href="{{ url_for('new_complaint') }}" class="btn-editorial btn-editorial-primary">
+      <i class="fa-solid fa-plus"></i> Submit New Case
+    </a>
+  {% endif %}
+</div>
+
+<!-- Filters Panel -->
+<div style="border: 1px solid var(--border-subtle); background: var(--bg-surface); padding: 1.75rem; margin-bottom: 2.5rem;">
+  <form action="{{ url_for('my_complaints') }}" method="GET" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; align-items: end;">
+    
+    <div>
+      <label class="form-label">SEARCH</label>
+      <input type="text" name="search" class="form-control-editorial" placeholder="Keyword or ID..." value="{{ search_term or '' }}">
+    </div>
+
+    <div>
+      <label class="form-label">PRIORITY</label>
+      <select name="priority" class="form-control-editorial">
+        <option value="ALL" {% if priority_filter == 'ALL' or not priority_filter %}selected{% endif %}>ALL PRIORITIES</option>
+        <option value="CRITICAL" {% if priority_filter == 'CRITICAL' %}selected{% endif %}>CRITICAL (81-100)</option>
+        <option value="HIGH" {% if priority_filter == 'HIGH' %}selected{% endif %}>HIGH (61-80)</option>
+        <option value="MEDIUM" {% if priority_filter == 'MEDIUM' %}selected{% endif %}>MEDIUM (31-60)</option>
+        <option value="LOW" {% if priority_filter == 'LOW' %}selected{% endif %}>LOW (0-30)</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="form-label">STATUS</label>
+      <select name="status" class="form-control-editorial">
+        <option value="ALL" {% if status_filter == 'ALL' or not status_filter %}selected{% endif %}>ALL STATUSES</option>
+        <option value="Pending" {% if status_filter == 'Pending' %}selected{% endif %}>PENDING</option>
+        <option value="In Progress" {% if status_filter == 'In Progress' %}selected{% endif %}>IN PROGRESS</option>
+        <option value="Resolved" {% if status_filter == 'Resolved' %}selected{% endif %}>RESOLVED</option>
+        <option value="Rejected" {% if status_filter == 'Rejected' %}selected{% endif %}>REJECTED</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="form-label">CATEGORY</label>
+      <select name="category" class="form-control-editorial">
+        <option value="ALL" {% if category_filter == 'ALL' or not category_filter %}selected{% endif %}>ALL CATEGORIES</option>
+        <option value="Water & Utilities" {% if category_filter == 'Water & Utilities' %}selected{% endif %}>Water & Utilities</option>
+        <option value="Infrastructure & Roads" {% if category_filter == 'Infrastructure & Roads' %}selected{% endif %}>Infrastructure & Roads</option>
+        <option value="Safety & Security" {% if category_filter == 'Safety & Security' %}selected{% endif %}>Safety & Security</option>
+        <option value="Health & Sanitation" {% if category_filter == 'Health & Sanitation' %}selected{% endif %}>Health & Sanitation</option>
+      </select>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem;">
+      <button type="submit" class="btn-editorial btn-editorial-primary" style="flex: 1;">FILTER</button>
+      <a href="{{ url_for('my_complaints') }}" class="btn-editorial btn-editorial-secondary">RESET</a>
+    </div>
+
+  </form>
+</div>
+
+<!-- Table Output -->
+<div class="table-editorial-wrapper">
+  {% if complaints %}
+    <table class="table-editorial">
+      <thead>
+        <tr>
+          <th>CASE ID</th>
+          <th>TITLE & LOCATION</th>
+          <th>CATEGORY</th>
+          <th>PRIORITY</th>
+          <th>SCORE</th>
+          <th>STATUS</th>
+          <th>DATE</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in complaints %}
+          <tr>
+            <td style="font-family: var(--font-mono); font-weight: 700; color: var(--accent-copper);">
+              {{ c.tracking_id }}
+            </td>
+            <td>
+              <a href="{{ url_for('complaint_detail', id=c.id) }}" style="color: var(--text-main); font-weight: 600; text-decoration: none;">
+                {{ c.title }}
+              </a>
+              <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">
+                {{ c.location }}
+              </div>
+            </td>
+            <td style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">
+              {{ c.category }}
+            </td>
+            <td>
+              {% if c.priority == 'CRITICAL' %}
+                <span class="status-tag status-critical">CRITICAL</span>
+              {% elif c.priority == 'HIGH' %}
+                <span class="status-tag status-high">HIGH</span>
+              {% elif c.priority == 'MEDIUM' %}
+                <span class="status-tag status-medium">MEDIUM</span>
+              {% else %}
+                <span class="status-tag status-low">LOW</span>
+              {% endif %}
+            </td>
+            <td style="font-family: var(--font-mono); font-weight: 700; color: var(--color-ivory);">
+              {{ c.ai_score }}
+            </td>
+            <td>
+              {% if c.status == 'Pending' %}
+                <span class="status-tag status-pending">PENDING</span>
+              {% elif c.status == 'In Progress' %}
+                <span class="status-tag status-in-progress">IN PROGRESS</span>
+              {% elif c.status == 'Resolved' %}
+                <span class="status-tag status-resolved">RESOLVED</span>
+              {% else %}
+                <span class="status-tag status-pending">REJECTED</span>
+              {% endif %}
+            </td>
+            <td style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">
+              {{ c.created_at[:10] }}
+            </td>
+            <td>
+              <a href="{{ url_for('complaint_detail', id=c.id) }}" class="btn-editorial btn-editorial-secondary btn-sm">
+                View File
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div style="padding: 4rem; text-align: center; font-family: var(--font-mono); color: var(--text-muted);">
+      NO CASE RECORDS MATCH THE SPECIFIED FILTERS.
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

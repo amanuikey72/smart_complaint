@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Case File / {{ complaint.tracking_id }} — SmartComplaint AI{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div style="border-bottom: 1px solid var(--border-strong); padding-bottom: 1.5rem; margin-bottom: 2.5rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <div class="section-num">OFFICIAL CASE FILE</div>
+    <h1 class="editorial-heading" style="margin-bottom: 0.25rem;">CASE / {{ complaint.tracking_id }}</h1>
+    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-dim);">
+      OPENED / {{ complaint.created_at[:10] }}
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+    {% if complaint.priority == 'CRITICAL' %}
+      <span class="status-tag status-critical">CRITICAL</span>
+    {% elif complaint.priority == 'HIGH' %}
+      <span class="status-tag status-high">HIGH</span>
+    {% elif complaint.priority == 'MEDIUM' %}
+      <span class="status-tag status-medium">MEDIUM</span>
+    {% else %}
+      <span class="status-tag status-low">LOW</span>
+    {% endif %}
+
+    <a href="{{ url_for('track_complaint', tracking_id=complaint.tracking_id) }}" class="btn-editorial btn-editorial-secondary">
+      Public Link
+    </a>
+  </div>
+</div>
+
+<!-- Grid -->
+<div class="grid-asymmetric" style="grid-template-columns: 2fr 1fr; gap: 3rem; align-items: start;">
+  
+  <!-- Left Column: Case Content -->
+  <div style="display: flex; flex-direction: column; gap: 3rem;">
+    
+    <div class="case-file-container">
+      <div style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--color-ivory); margin-bottom: 1.5rem;">
+        {{ complaint.title }}
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; font-family: var(--font-mono); font-size: 0.8rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 1.5rem;">
+        <div>
+          <span style="color: var(--text-dim);">LOCATION:</span>
+          <div style="color: var(--color-ivory);">{{ complaint.location }}</div>
+        </div>
+        <div>
+          <span style="color: var(--text-dim);">CLASSIFICATION:</span>
+          <div style="color: var(--color-ivory);">{{ complaint.category }}</div>
+        </div>
+      </div>
+
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper); margin-bottom: 0.5rem;">
+        INCIDENT DESCRIPTION
+      </div>
+      <p style="color: var(--text-main); font-size: 0.95rem; line-height: 1.7; white-space: pre-line;">
+        {{ complaint.description }}
+      </p>
+
+      {% if complaint.admin_notes %}
+        <div style="margin-top: 2rem; border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; font-family: var(--font-mono);">
+          <div style="font-size: 0.75rem; color: var(--status-high); margin-bottom: 0.5rem;">AUTHORITY REMARKS</div>
+          <div style="font-size: 0.88rem; color: var(--text-muted);">{{ complaint.admin_notes }}</div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Resolution Timeline -->
+    <div class="case-file-container">
+      <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-copper); letter-spacing: 0.15em; margin-bottom: 1.5rem;">
+        RESOLUTION TIMELINE
+      </div>
+
+      <div class="timeline-vertical">
+        <div class="timeline-item active">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper);">SUBMITTED</div>
+          <div style="font-weight: 600;">Report intake registered in database.</div>
+        </div>
+
+        <div class="timeline-item active">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper);">ANALYZED</div>
+          <div style="font-weight: 600;">Priority score calculated: {{ complaint.ai_score }} / 100</div>
+        </div>
+
+        <div class="timeline-item {% if complaint.status != 'Pending' %}active{% endif %}">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">DISPATCH</div>
+          <div style="font-weight: 600;">{{ complaint.recommended_handling }}</div>
+        </div>
+
+        <div class="timeline-item {% if complaint.status == 'Resolved' %}active{% endif %}">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">RESOLUTION</div>
+          <div style="font-weight: 600;">STATUS: {{ complaint.status | upper }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Column: AI Score & Admin Controls -->
+  <div style="display: flex; flex-direction: column; gap: 2rem;">
+    
+    <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 2rem; font-family: var(--font-mono);">
+      <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">AI ASSESSMENT SCORE</div>
+      <div style="font-size: 3rem; font-weight: 700; color: var(--color-ivory); margin: 0.5rem 0;">
+        {{ complaint.ai_score }} <span style="font-size: 1rem; color: var(--text-dim);">/ 100</span>
+      </div>
+      <div style="border-top: 1px solid var(--border-subtle); padding-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+        URGENCY: {{ complaint.urgency }}
+      </div>
+    </div>
+
+    {% if session.get('role') == 'admin' %}
+      <div style="border: 1px solid var(--border-copper); background: var(--bg-secondary); padding: 2rem; font-family: var(--font-mono);">
+        <div style="font-size: 0.8rem; color: var(--accent-copper); margin-bottom: 1.25rem; font-weight: 700;">
+          ADMIN CONTROL RAIL
+        </div>
+
+        <form action="{{ url_for('admin_update_status', id=complaint.id) }}" method="POST">
+          <div class="form-group">
+            <label class="form-label">UPDATE STATUS</label>
+            <select name="status" class="form-control-editorial">
+              <option value="Pending" {% if complaint.status == 'Pending' %}selected{% endif %}>PENDING</option>
+              <option value="In Progress" {% if complaint.status == 'In Progress' %}selected{% endif %}>IN PROGRESS</option>
+              <option value="Resolved" {% if complaint.status == 'Resolved' %}selected{% endif %}>RESOLVED</option>
+              <option value="Rejected" {% if complaint.status == 'Rejected' %}selected{% endif %}>REJECTED</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">ADMIN REMARKS</label>
+            <textarea name="admin_notes" class="form-control-editorial" style="min-height: 80px;">{{ complaint.admin_notes or '' }}</textarea>
+          </div>
+
+          <button type="submit" class="btn-editorial btn-editorial-primary" style="width: 100%; margin-bottom: 1rem;">
+            Save Status
+          </button>
+        </form>
+
+        <form action="{{ url_for('admin_delete_complaint', id=complaint.id) }}" method="POST" onsubmit="return confirm('Permanently delete record?');">
+          <button type="submit" class="btn-editorial btn-editorial-danger" style="width: 100%;">
+            Delete Case
+          </button>
+        </form>
+      </div>
+    {% endif %}
+
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In — SmartComplaint AI Platform{% endblock %}
+
+{% block content %}
+<section style="max-width: 900px; margin: 2rem auto;">
+  <div class="grid-asymmetric" style="align-items: stretch;">
+    
+    <!-- Left Column: Editorial Information -->
+    <div style="border: 1px solid var(--border-subtle); background: var(--bg-secondary); padding: 2.5rem; display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;">
+      <div>
+        <div class="section-num">SYSTEM AUTHENTICATION</div>
+        <h2 class="editorial-heading" style="font-size: 2rem; margin-bottom: 1.5rem;">Access Governance Portal</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 2rem;">
+          Unified access rail for citizens submitting infrastructure complaints and municipal administrators monitoring operational queues.
+        </p>
+      </div>
+
+      <!-- Demo Credentials Helper Box -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 1.25rem; font-family: var(--font-mono); font-size: 0.75rem;">
+        <div style="color: var(--accent-copper); font-weight: 700; margin-bottom: 0.5rem; letter-spacing: 0.1em;">
+          DEMO ACCESS CREDENTIALS
+        </div>
+        <div style="margin-bottom: 0.35rem;">
+          <span style="color: var(--text-dim);">ADMIN:</span> <code style="color: var(--color-ivory);">admin@smartcomplaint.gov.in</code> / <code style="color: var(--color-ivory);">admin123</code>
+        </div>
+        <div>
+          <span style="color: var(--text-dim);">CITIZEN:</span> <code style="color: var(--color-ivory);">citizen@gmail.com</code> / <code style="color: var(--color-ivory);">user123</code>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Login Form -->
+    <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 2.5rem;">
+      <h3 style="font-family: var(--font-serif); font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--color-ivory);">Sign In</h3>
+      
+      <form action="{{ url_for('login') }}" method="POST">
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" name="email" class="form-control-editorial" placeholder="e.g. citizen@gmail.com" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control-editorial" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn-editorial btn-editorial-primary" style="width: 100%; padding: 0.85rem; margin-top: 0.5rem;">
+          Authenticate Session
+        </button>
+      </form>
+
+      <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-dim);">
+        New citizen user? <a href="{{ url_for('register') }}" style="color: var(--accent-copper); text-decoration: none; font-weight: 600;">Create Account</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

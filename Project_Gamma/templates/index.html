@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+
+{% block title %}SmartComplaint AI — Institutional Civic Infrastructure{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section: Editorial Split Composition -->
+<section style="margin-bottom: 5rem;">
+  <div class="grid-asymmetric" style="align-items: center;">
+    <div>
+      <div class="section-num">CIVIC PLATFORM / 00</div>
+      <h1 class="editorial-heading" style="font-size: 3rem; line-height: 1.15; margin-bottom: 1.5rem;">
+        WHEN A CITY HAS A PROBLEM,<br>
+        THE RESPONSE SHOULD KNOW<br>
+        <span style="color: var(--accent-copper);">WHERE TO BEGIN.</span>
+      </h1>
+      <p style="color: var(--text-muted); font-size: 1.05rem; max-width: 540px; margin-bottom: 2.5rem; line-height: 1.7;">
+        SmartComplaint AI is an architectural governance platform that processes citizen reports, analyzes operational urgency through explainable language models, and orders municipal response by structural risk.
+      </p>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        {% if session.get('user_id') %}
+          <a href="{{ url_for('new_complaint') }}" class="btn-editorial btn-editorial-primary">
+            File New Case
+          </a>
+        {% else %}
+          <a href="{{ url_for('register') }}" class="btn-editorial btn-editorial-primary">
+            Register Citizen Account
+          </a>
+        {% endif %}
+        <a href="{{ url_for('track_complaint') }}" class="btn-editorial btn-editorial-secondary">
+          Track Existing Case
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Side: Vertical Live-Style Intelligence Panel -->
+    <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 2.5rem; position: relative;">
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper); letter-spacing: 0.15em; margin-bottom: 1.5rem;">
+        SYSTEM MONITOR // LIVE ASSESSMENT PREVIEW
+      </div>
+
+      <div style="font-family: var(--font-mono); display: flex; flex-direction: column; gap: 1.25rem;">
+        <div>
+          <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">CASE IDENTIFIER</div>
+          <div style="font-size: 1.25rem; font-weight: 700; color: var(--color-ivory);">CASE / SC-2048</div>
+        </div>
+
+        <div class="divider-editorial" style="margin: 0.25rem 0;"></div>
+
+        <div>
+          <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">CATEGORY</div>
+          <div style="font-size: 1rem; color: var(--text-main);">WATER INFRASTRUCTURE</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+          <div>
+            <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">PRIORITY LEVEL</div>
+            <div class="status-tag status-high" style="margin-top: 0.25rem;">HIGH</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">SCORE</div>
+            <div style="font-size: 2rem; font-weight: 700; color: var(--color-ivory); line-height: 1;">76 <span style="font-size: 1rem; color: var(--text-dim);">/ 100</span></div>
+          </div>
+        </div>
+
+        <div class="divider-editorial" style="margin: 0.25rem 0;"></div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--color-ivory-dim);">
+          <span>STATUS: PENDING DISPATCH</span>
+          <span style="color: var(--status-high);">REVIEW REQUIRED</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-editorial"></div>
+
+<!-- 01 / THE PROBLEM -->
+<section style="margin-bottom: 5rem;">
+  <div class="section-num">01 / THE PROBLEM</div>
+  <h2 class="editorial-heading">Civic Congestion & Deferred Urgency</h2>
+  <p style="color: var(--text-muted); max-width: 720px; font-size: 1rem; margin-bottom: 2.5rem;">
+    Traditional municipal feedback loops process grievances in simple chronological order. Critical gas leaks and structural water main failures wait in the same queue behind minor aesthetic complaints, causing dangerous response delays.
+  </p>
+</section>
+
+<div class="divider-editorial"></div>
+
+<!-- 02 / THE SYSTEM -->
+<section style="margin-bottom: 5rem;">
+  <div class="section-num">02 / THE SYSTEM</div>
+  <h2 class="editorial-heading">Intelligent Priority Pipeline</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+    <div style="border: 1px solid var(--border-subtle); padding: 1.5rem; background: var(--bg-surface);">
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper);">STEP 01</div>
+      <div style="font-family: var(--font-serif); font-size: 1.15rem; margin: 0.5rem 0;">Citizen Report</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Structured report intake with exact location & context.</p>
+    </div>
+    <div style="border: 1px solid var(--border-subtle); padding: 1.5rem; background: var(--bg-surface);">
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper);">STEP 02</div>
+      <div style="font-family: var(--font-serif); font-size: 1.15rem; margin: 0.5rem 0;">Language Analysis</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">NLP semantic scoring parses emergency indicators.</p>
+    </div>
+    <div style="border: 1px solid var(--border-subtle); padding: 1.5rem; background: var(--bg-surface);">
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper);">STEP 03</div>
+      <div style="font-family: var(--font-serif); font-size: 1.15rem; margin: 0.5rem 0;">Priority Ranking</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Case scored 0-100 & categorized into risk matrix.</p>
+    </div>
+    <div style="border: 1px solid var(--border-subtle); padding: 1.5rem; background: var(--bg-surface);">
+      <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper);">STEP 04</div>
+      <div style="font-family: var(--font-serif); font-size: 1.15rem; margin: 0.5rem 0;">Department Dispatch</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">Instant placement into authority action queue.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider-editorial"></div>
+
+<!-- 03 / PRIORITY LOGIC (Vertical Scale) -->
+<section style="margin-bottom: 5rem;">
+  <div class="section-num">03 / PRIORITY LOGIC</div>
+  <h2 class="editorial-heading">Risk Classification Scale</h2>
+  <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem;">
+    
+    <div style="display: flex; align-items: center; border: 1px solid var(--status-critical-border); background: var(--status-critical-bg); padding: 1.25rem 1.75rem; gap: 2rem; flex-wrap: wrap;">
+      <div style="font-family: var(--font-mono); font-weight: 700; font-size: 1.25rem; color: #F0A0A0; width: 100px;">81 - 100</div>
+      <div class="status-tag status-critical">CRITICAL</div>
+      <div style="font-size: 0.9rem; color: var(--text-main); flex: 1; min-width: 240px;">Immediate public threat, structural hazard, or active infrastructure emergency.</div>
+    </div>
+
+    <div style="display: flex; align-items: center; border: 1px solid var(--status-high-border); background: var(--status-high-bg); padding: 1.25rem 1.75rem; gap: 2rem; flex-wrap: wrap;">
+      <div style="font-family: var(--font-mono); font-weight: 700; font-size: 1.25rem; color: #F4B09B; width: 100px;">61 - 80</div>
+      <div class="status-tag status-high">HIGH</div>
+      <div style="font-size: 0.9rem; color: var(--text-main); flex: 1; min-width: 240px;">Severe service disruption, major road hazard, or secondary public risk.</div>
+    </div>
+
+    <div style="display: flex; align-items: center; border: 1px solid var(--status-medium-border); background: var(--status-medium-bg); padding: 1.25rem 1.75rem; gap: 2rem; flex-wrap: wrap;">
+      <div style="font-family: var(--font-mono); font-weight: 700; font-size: 1.25rem; color: #F2D59B; width: 100px;">31 - 60</div>
+      <div class="status-tag status-medium">MEDIUM</div>
+      <div style="font-size: 0.9rem; color: var(--text-main); flex: 1; min-width: 240px;">Standard maintenance, localized disruption, or scheduled municipal repair.</div>
+    </div>
+
+    <div style="display: flex; align-items: center; border: 1px solid var(--status-low-border); background: var(--status-low-bg); padding: 1.25rem 1.75rem; gap: 2rem; flex-wrap: wrap;">
+      <div style="font-family: var(--font-mono); font-weight: 700; font-size: 1.25rem; color: #B5D4BC; width: 100px;">00 - 30</div>
+      <div class="status-tag status-low">LOW</div>
+      <div style="font-size: 0.9rem; color: var(--text-main); flex: 1; min-width: 240px;">Minor nuisance, long-term improvement, or general citizen inquiry.</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider-editorial"></div>
+
+<!-- 04 / CITIZEN EXPERIENCE -->
+<section style="margin-bottom: 5rem;">
+  <div class="section-num">04 / CITIZEN EXPERIENCE</div>
+  <h2 class="editorial-heading">Transparent Complaint Journey</h2>
+  <div class="grid-asymmetric" style="align-items: center;">
+    <div>
+      <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem;">
+        Every citizen receives a unique tracking code (`SC-YYYY-XXXX`). As municipal teams evaluate and resolve the issue, the timeline reflects every status transition with full timestamped accountability.
+      </p>
+      <a href="{{ url_for('track_complaint') }}" class="btn-editorial btn-editorial-secondary">
+        Test Public Tracker
+      </a>
+    </div>
+    <div style="border: 1px solid var(--border-subtle); background: var(--bg-surface); padding: 2rem;">
+      <div class="timeline-vertical">
+        <div class="timeline-item active">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper);">13 SEP 2026 14:20</div>
+          <div style="font-weight: 600;">SUBMITTED & NLP ANALYZED</div>
+        </div>
+        <div class="timeline-item active">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-copper);">13 SEP 2026 14:25</div>
+          <div style="font-weight: 600;">ASSIGNED TO WATER AUTHORITY</div>
+        </div>
+        <div class="timeline-item">
+          <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">PENDING DISPATCH</div>
+          <div style="color: var(--text-dim);">IN PROGRESS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-editorial"></div>
+
+<!-- 05 / ADMINISTRATIVE VIEW -->
+<section style="margin-bottom: 5rem;">
+  <div class="section-num">05 / ADMINISTRATIVE VIEW</div>
+  <h2 class="editorial-heading">Civic Operations Preview</h2>
+  <p style="color: var(--text-muted); max-width: 680px; margin-bottom: 2rem;">
+    Authorities access a structured Command Center showing real-time priority distribution, urgent alerts, and departmental response bottlenecks.
+  </p>
+  <div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 2rem; font-family: var(--font-mono);">
+    <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+      <span style="color: var(--accent-copper);">COMM-CTR // ACTIVE PRIORITY MONITOR</span>
+      <span style="color: var(--text-dim);">SORT: AI_SCORE DESC</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+        <span>01 / SC-2048 WATER MAIN LEAKAGE</span>
+        <span class="status-tag status-critical">CRITICAL (94/100)</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+        <span>02 / SC-2051 HIGH VOLTAGE CABLE EXPOSED</span>
+        <span class="status-tag status-critical">CRITICAL (89/100)</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+        <span>03 / SC-2044 ROAD COLLAPSE AT CENTRAL AVE</span>
+        <span class="status-tag status-high">HIGH (78/100)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-editorial"></div>
+
+<!-- 06 / TRANSPARENCY -->
+<section style="margin-bottom: 5rem;">
+  <div class="section-num">06 / TRANSPARENCY</div>
+  <h2 class="editorial-heading">Explainable Assessment Factors</h2>
+  <div class="grid-asymmetric">
+    <div style="border: 1px solid var(--border-subtle); background: var(--bg-surface); padding: 2rem;">
+      <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent-copper); margin-bottom: 1rem;">EVALUATION CRITERIA</div>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.8rem; font-size: 0.9rem; color: var(--text-muted);">
+        <li>✓ Emergency key phrases & danger terminology</li>
+        <li>✓ Category vulnerability multiplier</li>
+        <li>✓ Text length & detail verification bonus</li>
+        <li>✓ Public safety risk scoring algorithm</li>
+      </ul>
+    </div>
+    <div>
+      <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">
+        The system does not use black-box decision models. Every priority assignment includes exact signals detected in the citizen's report text so citizens and administrators understand why a case was elevated.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="divider-editorial"></div>
+
+<!-- 07 / REPORT AN ISSUE (Final CTA) -->
+<section style="text-align: center; padding: 4rem 2rem; border: 1px solid var(--border-copper); background: var(--bg-secondary);">
+  <div class="section-num" style="margin-bottom: 1rem;">07 / SYSTEM ACCESS</div>
+  <h2 class="editorial-heading" style="font-size: 2.5rem; margin-bottom: 1rem;">Report a Civic Issue Today</h2>
+  <p style="color: var(--text-muted); max-width: 540px; margin: 0 auto 2.5rem auto;">
+    Submit your report to the SmartComplaint AI engine for real-time prioritization and authority dispatch.
+  </p>
+  <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+    {% if session.get('user_id') %}
+      <a href="{{ url_for('new_complaint') }}" class="btn-editorial btn-editorial-primary">
+        Submit New Complaint
+      </a>
+      <a href="{{ url_for('dashboard') }}" class="btn-editorial btn-editorial-secondary">
+        My Dashboard
+      </a>
+    {% else %}
+      <a href="{{ url_for('register') }}" class="btn-editorial btn-editorial-primary">
+        Register Citizen Account
+      </a>
+      <a href="{{ url_for('login') }}" class="btn-editorial btn-editorial-secondary">
+        Sign In
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

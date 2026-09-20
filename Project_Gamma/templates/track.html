@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Track Case — SmartComplaint AI{% endblock %}
+
+{% block content %}
+
+<!-- Search Header -->
+<div style="max-width: 800px; margin: 0 auto 3rem auto; text-align: center;">
+  <div class="section-num">INSTITUTIONAL TRACKING SYSTEM</div>
+  <h1 class="editorial-heading" style="font-size: 2.5rem; margin-bottom: 1rem;">ENTER CASE NUMBER</h1>
+  <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem;">
+    Access live status updates, priority ratings, and resolution timestamps.
+  </p>
+
+  <form action="{{ url_for('track_complaint') }}" method="POST">
+    <div style="display: flex; gap: 0.75rem; max-width: 580px; margin: 0 auto;">
+      <input type="text" name="tracking_id" class="form-control-editorial" style="font-family: var(--font-mono); font-size: 1.1rem; text-transform: uppercase;" placeholder="e.g. SC-2026-9101" value="{{ search_query or '' }}" required>
+      <button type="submit" class="btn-editorial btn-editorial-primary">
+        SEARCH
+      </button>
+    </div>
+  </form>
+</div>
+
+<!-- Tracking Record Output -->
+{% if complaint %}
+  <div class="case-file-container" style="max-width: 800px; margin: 0 auto; font-family: var(--font-mono);">
+    
+    <div style="border-bottom: 1px solid var(--border-strong); padding-bottom: 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <div style="font-size: 0.75rem; color: var(--text-dim);">CASE IDENTIFIER</div>
+        <div style="font-family: var(--font-serif); font-size: 2rem; color: var(--color-ivory);">
+          CASE / {{ complaint.tracking_id }}
+        </div>
+      </div>
+      <div>
+        {% if complaint.priority == 'CRITICAL' %}
+          <span class="status-tag status-critical">CRITICAL</span>
+        {% elif complaint.priority == 'HIGH' %}
+          <span class="status-tag status-high">HIGH</span>
+        {% elif complaint.priority == 'MEDIUM' %}
+          <span class="status-tag status-medium">MEDIUM</span>
+        {% else %}
+          <span class="status-tag status-low">LOW</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-dim);">CURRENT STATUS</div>
+        <div style="font-size: 1.1rem; color: var(--color-ivory); margin-top: 0.25rem;">{{ complaint.status | upper }}</div>
+      </div>
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-dim);">AI SCORE</div>
+        <div style="font-size: 1.1rem; color: var(--color-ivory); margin-top: 0.25rem;">{{ complaint.ai_score }} / 100</div>
+      </div>
+      <div>
+        <div style="font-size: 0.7rem; color: var(--text-dim);">SUBMITTED</div>
+        <div style="font-size: 0.95rem; color: var(--color-ivory); margin-top: 0.25rem;">{{ complaint.created_at[:10] }}</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 2rem;">
+      <div style="font-size: 0.75rem; color: var(--accent-copper); margin-bottom: 0.5rem;">CASE TITLE & LOCATION</div>
+      <div style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--color-ivory); margin-bottom: 0.35rem;">
+        {{ complaint.title }}
+      </div>
+      <div style="font-size: 0.85rem; color: var(--text-muted);">
+        LOCATION: {{ complaint.location }}
+      </div>
+    </div>
+
+    <div style="border-top: 1px solid var(--border-subtle); padding-top: 1.5rem;">
+      <div style="font-size: 0.75rem; color: var(--accent-copper); margin-bottom: 1rem;">TIMELINE LOG</div>
+      
+      <div class="timeline-vertical">
+        <div class="timeline-item active">
+          <div style="font-size: 0.75rem; color: var(--accent-copper);">SUBMITTED</div>
+          <div style="color: var(--text-main);">Case registered into system.</div>
+        </div>
+
+        <div class="timeline-item active">
+          <div style="font-size: 0.75rem; color: var(--accent-copper);">ANALYZED</div>
+          <div style="color: var(--text-main);">AI evaluated score: {{ complaint.ai_score }} / 100</div>
+        </div>
+
+        <div class="timeline-item {% if complaint.status != 'Pending' %}active{% endif %}">
+          <div style="font-size: 0.75rem; color: var(--text-dim);">DISPATCH</div>
+          <div style="color: var(--text-main);">Assigned to {{ complaint.category }}</div>
+        </div>
+
+        <div class="timeline-item {% if complaint.status == 'Resolved' %}active{% endif %}">
+          <div style="font-size: 0.75rem; color: var(--text-dim);">STATUS</div>
+          <div style="color: var(--text-main);">{{ complaint.status | upper }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endif %}
+
+{% block extra_js %}
+{% endblock %}
+
+{% endblock %}

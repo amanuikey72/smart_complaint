@@ -1,0 +1,86 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_content %}
+
+<div style="border: 1px solid var(--border-strong); background: var(--bg-surface); padding: 2rem; font-family: var(--font-mono);">
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem;">
+    <div>
+      <div style="font-size: 0.75rem; color: var(--status-critical); letter-spacing: 0.15em; font-weight: 700;">
+        OPERATIONAL DISPATCH // RANKED BY AI SCORE DESCENDING
+      </div>
+      <h2 style="font-family: var(--font-serif); font-size: 1.75rem; color: var(--color-ivory);">
+        PRIORITY QUEUE
+      </h2>
+    </div>
+  </div>
+
+  {% if complaints %}
+    <div class="table-editorial-wrapper">
+      <table class="table-editorial">
+        <thead>
+          <tr>
+            <th>RANK</th>
+            <th>CASE ID</th>
+            <th>INCIDENT / LOCATION</th>
+            <th>CITIZEN</th>
+            <th>CATEGORY</th>
+            <th>PRIORITY TIER</th>
+            <th>AI SCORE</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in complaints %}
+            <tr style="{% if c.priority == 'CRITICAL' %}background: var(--status-critical-bg);{% endif %}">
+              <td style="font-size: 0.9rem; font-weight: 700; color: var(--accent-copper);">
+                {% if loop.index < 10 %}0{% endif %}{{ loop.index }}
+              </td>
+              <td style="font-weight: 700; color: var(--color-ivory);">
+                {{ c.tracking_id }}
+              </td>
+              <td>
+                <a href="{{ url_for('complaint_detail', id=c.id) }}" style="color: var(--text-main); font-weight: 600; text-decoration: none;">
+                  {{ c.title }}
+                </a>
+                <div style="font-size: 0.75rem; color: var(--text-dim);">
+                  {{ c.location }}
+                </div>
+              </td>
+              <td style="font-size: 0.8rem; color: var(--text-muted);">
+                {{ c.citizen_name }}
+              </td>
+              <td style="font-size: 0.8rem; color: var(--text-muted);">
+                {{ c.category }}
+              </td>
+              <td>
+                {% if c.priority == 'CRITICAL' %}
+                  <span class="status-tag status-critical">CRITICAL</span>
+                {% elif c.priority == 'HIGH' %}
+                  <span class="status-tag status-high">HIGH</span>
+                {% elif c.priority == 'MEDIUM' %}
+                  <span class="status-tag status-medium">MEDIUM</span>
+                {% else %}
+                  <span class="status-tag status-low">LOW</span>
+                {% endif %}
+              </td>
+              <td style="font-size: 1.25rem; font-weight: 700; color: var(--color-ivory);">
+                {{ c.ai_score }} <span style="font-size: 0.75rem; color: var(--text-dim);">/ 100</span>
+              </td>
+              <td>
+                <a href="{{ url_for('complaint_detail', id=c.id) }}" class="btn-editorial btn-editorial-primary btn-sm">
+                  Inspect
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div style="padding: 3rem; text-align: center; color: var(--text-muted);">
+      NO ACTIVE RECORDS IN PRIORITY QUEUE.
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}
